@@ -4,7 +4,7 @@ import {
     UnauthorizedException,
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
-import { WARNING_MESSAGES } from '../../utiles/constants'
+import { ErrorEnum } from '../../types/enums'
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -14,9 +14,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
     handleRequest(err, user) {
         if (err || !user) {
-            throw (
-                err || new UnauthorizedException(WARNING_MESSAGES.USER_NOT_AUTH)
-            )
+            throw err || new UnauthorizedException(ErrorEnum.USER_NOT_AUTH)
         }
         return user
     }

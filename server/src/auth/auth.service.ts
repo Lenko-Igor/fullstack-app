@@ -1,21 +1,39 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import {
+    BadRequestException,
+    HttpException,
+    HttpStatus,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
 import { UsersService } from '../users/users.service'
 import { User } from '../users/entities/user.entity'
-import { WARNING_MESSAGES } from '../utiles/constants'
 import { LoginUserDto } from '../users/dto/login-user.dto'
+import { CreateUserDto } from '../users/dto/create-user.dto'
+import { ErrorEnum } from '../types/enums'
 
 @Injectable()
 export class AuthService {
     constructor(
         private usersService: UsersService,
-        private jwtService: JwtService,
+        private readonly jwtService: JwtService,
     ) {}
 
     async login(user: User): Promise<{ token: string }> {
         try {
             return this.generateToken(user)
+        } catch (e) {
+            throw e
+        }
+    }
+
+    async registration(
+        createUserDto: CreateUserDto,
+    ): Promise<{ token: string }> {
+        try {
+            const newUser = await this.usersService.create(createUserDto)
+            return this.generateToken(newUser)
         } catch (e) {
             throw e
         }
@@ -38,13 +56,13 @@ export class AuthService {
         const user = await this.usersService.findOneByEmail(email)
 
         if (!user) {
-            throw new UnauthorizedException(WARNING_MESSAGES.EMAIL_INCORRECT)
+            throw new UnauthorizedException(ErrorEnum.EMAIL_IS_INCORRECT)
         }
 
         const match = await bcrypt.compare(password, user?.password)
 
         if (!match) {
-            throw new UnauthorizedException(WARNING_MESSAGES.PASSWORD_INCORRECT)
+            throw new UnauthorizedException(ErrorEnum.PASSWORD_IS_INCORRECT)
         }
 
         return user

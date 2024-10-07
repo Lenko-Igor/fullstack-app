@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/user.entity'
-import { WARNING_MESSAGES } from '../utiles/constants'
+import { ErrorEnum } from '../types/enums'
 
 @Injectable()
 export class UsersService {
@@ -20,7 +20,7 @@ export class UsersService {
         })
 
         if (isExistUser)
-            throw new BadRequestException(WARNING_MESSAGES.USER_EXISTS)
+            throw new BadRequestException(ErrorEnum.USER_WITH_SUCH_EMAIL_EXISTS)
 
         const salt = await bcrypt.genSalt()
         return await this.userRepository.save({

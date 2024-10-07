@@ -2,7 +2,7 @@ import { Strategy } from 'passport-local'
 import { PassportStrategy } from '@nestjs/passport'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { AuthService } from '../auth.service'
-import { WARNING_MESSAGES } from '../../utiles/constants'
+import { ErrorEnum } from '../../types/enums'
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -14,7 +14,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         const user = await this.authService.validateUser({ email, password })
         if (!user) {
             throw new UnauthorizedException(
-                WARNING_MESSAGES.USER_AUTH_INCORRECT,
+                ErrorEnum.PASSWORD_OR_EMAIL_ARE_INCORRECT,
             )
         }
         return user
