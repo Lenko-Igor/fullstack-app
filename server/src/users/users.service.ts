@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import {
+    BadRequestException,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import * as bcrypt from 'bcrypt'
@@ -36,8 +40,10 @@ export class UsersService {
         return 'This action returns all users'
     }
 
-    findOne(id: number): string {
-        return `This action gets found user by id:${id}`
+    async findOneByEmail(email: string): Promise<User> {
+        return await this.userRepository.findOneBy({
+            email: email,
+        })
     }
 
     update(id: number, updateUserDto: UpdateUserDto): string {
