@@ -1,8 +1,4 @@
-import {
-    BadRequestException,
-    Injectable,
-    UnauthorizedException,
-} from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import * as bcrypt from 'bcrypt'
@@ -27,17 +23,15 @@ export class UsersService {
             throw new BadRequestException(WARNING_MESSAGES.USER_EXISTS)
 
         const salt = await bcrypt.genSalt()
-        const newUser = await this.userRepository.save({
+        return await this.userRepository.save({
             name: createUserDto.name,
             email: createUserDto.email,
             password: await bcrypt.hash(createUserDto.password, salt),
         })
-
-        return newUser
     }
 
-    findAll(): string {
-        return 'This action returns all users'
+    async findAll(): Promise<User[]> {
+        return await this.userRepository.find()
     }
 
     async findOneByEmail(email: string): Promise<User> {
