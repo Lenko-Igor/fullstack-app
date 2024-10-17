@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/user.entity'
-import { WARNING_MESSAGES } from '../utiles/constants'
+import { ErrorEnum } from '../types/enums'
 
 @Injectable()
 export class UsersService {
@@ -20,24 +20,24 @@ export class UsersService {
         })
 
         if (isExistUser)
-            throw new BadRequestException(WARNING_MESSAGES.USER_EXISTS)
+            throw new BadRequestException(ErrorEnum.USER_WITH_SUCH_EMAIL_EXISTS)
 
         const salt = await bcrypt.genSalt()
-        const newUser = await this.userRepository.save({
+        return await this.userRepository.save({
             name: createUserDto.name,
             email: createUserDto.email,
             password: await bcrypt.hash(createUserDto.password, salt),
         })
-
-        return newUser
     }
 
-    findAll(): string {
-        return 'This action returns all users'
+    async findAll(): Promise<User[]> {
+        return await this.userRepository.find()
     }
 
-    findOne(id: number): string {
-        return `This action gets found user by id:${id}`
+    async findOneByEmail(email: string): Promise<User> {
+        return await this.userRepository.findOneBy({
+            email: email,
+        })
     }
 
     update(id: number, updateUserDto: UpdateUserDto): string {
