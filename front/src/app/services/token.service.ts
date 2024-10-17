@@ -2,21 +2,31 @@ import Cookies from "js-cookie";
 import { TokensData } from "../global/types";
 
 const setTokens = ({ token, refreshToken }: TokensData) => {
-  Cookies.set("token", token, { expires: 1 });
-  Cookies.set("refreshToken", refreshToken);
+    Cookies.set("token", token, { expires: 1 });
+    Cookies.set("refreshToken", refreshToken);
 };
 
 const getAccessToken = () => {
-  return Cookies.get("token");
+    return Cookies.get("token");
+};
+
+const getRefreshToken = () => {
+    return Cookies.get("refreshToken");
 };
 
 const deleteTokens = () => {
-  Cookies.remove("token");
-  Cookies.remove("refreshToken");
+    Cookies.remove("token");
+    Cookies.remove("refreshToken");
 };
 
+const updateToken = (token: string) => {
+    Cookies.set("token", token, { expires: 1 });
+}
+
 export default {
-  setTokens,
-  getAccessToken,
-  deleteTokens,
+    setTokens,
+    getAccessToken,
+    getRefreshToken,
+    deleteTokens,
+    updateToken,
 };
