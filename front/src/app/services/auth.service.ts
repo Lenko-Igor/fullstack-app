@@ -1,5 +1,5 @@
-import { API } from '../global/api'
 import { LoginProps, SignUpProps } from '../global/types'
+import { API } from '../utiles/constants/api'
 import { API_ENDPOINTS } from '../utiles/constants/api-endpoints'
 
 type ApiResponse<T> = T

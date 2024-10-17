@@ -1,5 +1,5 @@
 import axios from 'axios'
-import tokenService from '../services/token.service'
+import tokenService from '../../services/token.service'
 
 export const API_URL = import.meta.env.VITE_APP_API_URL
 
