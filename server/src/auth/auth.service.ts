@@ -9,56 +9,68 @@ import { ErrorEnum } from '../types/enums'
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private usersService: UsersService,
-        private readonly jwtService: JwtService,
-    ) { }
+  constructor(
+    private usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-    async login(user: User): Promise<{ token: string }> {
-        try {
-            return this.generateToken(user)
-        } catch (e) {
-            throw e
-        }
+  async login(user: User): Promise<{ token: string; refreshToken: string }> {
+    try {
+      return this.generateToken(user)
+    } catch (e) {
+      throw e
+    }
+  }
+
+  async registration(
+    createUserDto: CreateUserDto,
+  ): Promise<{ token: string; refreshToken: string }> {
+    try {
+      const newUser = await this.usersService.create(createUserDto)
+      return this.generateToken(newUser)
+    } catch (e) {
+      throw e
+    }
+  }
+
+  async refreshToken(user: User): Promise<{ token: string }> {
+    try {
+      const { token } = await this.generateToken(user)
+      return { token }
+    } catch (e) {
+      throw e
+    }
+  }
+
+  private async generateToken(
+    user: User,
+  ): Promise<{ token: string; refreshToken: string }> {
+    const payload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
     }
 
-    async registration(
-        createUserDto: CreateUserDto,
-    ): Promise<{ token: string }> {
-        try {
-            const newUser = await this.usersService.create(createUserDto)
-            return this.generateToken(newUser)
-        } catch (e) {
-            throw e
-        }
+    return {
+      token: this.jwtService.sign(payload),
+      refreshToken: this.jwtService.sign(payload, { expiresIn: '7d' }),
+    }
+  }
+
+  async validateUser(loginDto: LoginUserDto): Promise<User> {
+    const { email, password } = loginDto || {}
+    const user = await this.usersService.findOneByEmail(email)
+
+    if (!user) {
+      throw new UnauthorizedException(ErrorEnum.EMAIL_IS_INCORRECT)
     }
 
-    private async generateToken(user: User): Promise<{ token: string }> {
-        const payload = {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-        }
+    const match = await bcrypt.compare(password, user?.password)
 
-        return {
-            token: this.jwtService.sign(payload),
-        }
+    if (!match) {
+      throw new UnauthorizedException(ErrorEnum.PASSWORD_IS_INCORRECT)
     }
 
-    async validateUser(loginDto: LoginUserDto): Promise<User> {
-        const { email, password } = loginDto || {}
-        const user = await this.usersService.findOneByEmail(email)
-
-        if (!user) {
-            throw new UnauthorizedException(ErrorEnum.EMAIL_IS_INCORRECT)
-        }
-
-        const match = await bcrypt.compare(password, user?.password)
-
-        if (!match) {
-            throw new UnauthorizedException(ErrorEnum.PASSWORD_IS_INCORRECT)
-        }
-
-        return user
-    }
+    return user
+  }
 }

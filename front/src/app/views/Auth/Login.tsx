@@ -1,46 +1,46 @@
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useMutation } from '@tanstack/react-query'
-import { Stack } from '@mui/material'
-import BackHandIcon from '@mui/icons-material/BackHand'
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation } from "@tanstack/react-query";
+import { Stack } from "@mui/material";
+import BackHandIcon from "@mui/icons-material/BackHand";
 
-import { MESSAGES } from '../../global/messages'
-import authService from '../../services/auth.service'
-import tokenService from '../../services/token.service'
-import { ROUTES } from '../../utiles/constants/routes'
-import { LoginProps } from '../../global/types'
-import { EmailController } from '../../components/EmailController'
-import { FieldNameEnum } from '../../global/enums'
-import { PasswordController } from '../../components/PasswordController'
-import { schemaLogin } from './utiles/schemas'
-import { ButtonSubmit } from './components/ButtonSubmit'
-import { Header } from './components/Header'
-import { Footer } from './components/Footer'
-import { defaultValueLogIn } from './utiles/constants'
+import { MESSAGES } from "../../global/messages";
+import authService, { LoginResponse } from "../../services/auth.service";
+import tokenService from "../../services/token.service";
+import { ROUTES } from "../../utiles/constants/routes";
+import { LoginProps } from "../../global/types";
+import { EmailController } from "../../components/EmailController";
+import { FieldNameEnum } from "../../global/enums";
+import { PasswordController } from "../../components/PasswordController";
+import { schemaLogin } from "./utiles/schemas";
+import { ButtonSubmit } from "./components/ButtonSubmit";
+import { Header } from "./components/Header";
+import { Footer } from "./components/Footer";
+import { defaultValueLogIn } from "./utiles/constants";
 
-const FORM_ID: string = 'login'
+const FORM_ID: string = "login";
 
 export const Login = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { control, handleSubmit } = useForm<LoginProps>({
     defaultValues: defaultValueLogIn,
     resolver: yupResolver(schemaLogin),
-  })
+  });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (data: LoginProps): Promise<{ token: string }> => {
-      return authService.login(data)
+    mutationFn: (data: LoginProps): Promise<LoginResponse> => {
+      return authService.login(data);
     },
-    onSuccess: ({ token }) => {
-      tokenService.setToken({ token })
-      navigate(ROUTES.INITIAL_ROUTE)
+    onSuccess: ({ token, refreshToken }) => {
+      tokenService.setTokens({ token, refreshToken });
+      navigate(ROUTES.INITIAL_ROUTE);
     },
-  })
+  });
 
   const onSubmit: SubmitHandler<LoginProps> = (data) => {
-    mutate(data)
-  }
+    mutate(data);
+  };
 
   return (
     <>
@@ -51,10 +51,10 @@ export const Login = () => {
       />
 
       <Stack
-        component={'form'}
+        component={"form"}
         id={FORM_ID}
         onSubmit={handleSubmit(onSubmit)}
-        width={'100%'}
+        width={"100%"}
       >
         <EmailController
           control={control}
@@ -77,8 +77,8 @@ export const Login = () => {
       <Footer
         href={ROUTES.SIGN_UP}
         text={MESSAGES.BTN.REGISTRATION}
-        position={'end'}
+        position={"end"}
       />
     </>
-  )
-}
+  );
+};

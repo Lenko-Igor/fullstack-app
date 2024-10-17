@@ -9,43 +9,43 @@ import { ErrorEnum } from '../types/enums'
 
 @Injectable()
 export class UsersService {
-    constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
-    ) {}
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
-    async create(createUserDto: CreateUserDto): Promise<User> {
-        const isExistUser = await this.userRepository.findOneBy({
-            email: createUserDto.email,
-        })
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const isExistUser = await this.userRepository.findOneBy({
+      email: createUserDto.email,
+    })
 
-        if (isExistUser)
-            throw new BadRequestException(ErrorEnum.USER_WITH_SUCH_EMAIL_EXISTS)
+    if (isExistUser)
+      throw new BadRequestException(ErrorEnum.USER_WITH_SUCH_EMAIL_EXISTS)
 
-        const salt = await bcrypt.genSalt()
-        return await this.userRepository.save({
-            name: createUserDto.name,
-            email: createUserDto.email,
-            password: await bcrypt.hash(createUserDto.password, salt),
-        })
-    }
+    const salt = await bcrypt.genSalt()
+    return await this.userRepository.save({
+      name: createUserDto.name,
+      email: createUserDto.email,
+      password: await bcrypt.hash(createUserDto.password, salt),
+    })
+  }
 
-    async findAll(): Promise<User[]> {
-        return await this.userRepository.find()
-    }
+  async findAll(): Promise<User[]> {
+    return await this.userRepository.find()
+  }
 
-    async findOneByEmail(email: string): Promise<User> {
-        return await this.userRepository.findOneBy({
-            email: email,
-        })
-    }
+  async findOneByEmail(email: string): Promise<User> {
+    return await this.userRepository.findOneBy({
+      email: email,
+    })
+  }
 
-    update(id: number, updateUserDto: UpdateUserDto): string {
-        console.log('update user dto: ' + updateUserDto)
-        return `This action updated user with id:${id}`
-    }
+  update(id: number, updateUserDto: UpdateUserDto): string {
+    console.log('update user dto: ' + updateUserDto)
+    return `This action updated user with id:${id}`
+  }
 
-    remove(id: number): string {
-        return `Tis action gets remove ${id}`
-    }
+  remove(id: number): string {
+    return `Tis action gets remove ${id}`
+  }
 }

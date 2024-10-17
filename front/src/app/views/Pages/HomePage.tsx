@@ -1,21 +1,21 @@
-import { useEffect } from 'react'
-import { Button } from '@mui/material'
-import { MESSAGES } from '../../global/messages'
-import tokenService from '../../services/token.service'
-import { useNavigate } from 'react-router-dom'
-import { ROUTES } from '../../utiles/constants/routes'
+import { useEffect } from "react";
+import { Button } from "@mui/material";
+import { MESSAGES } from "../../global/messages";
+import tokenService from "../../services/token.service";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../utiles/constants/routes";
 
-export const HomePage = (): JSX.Element => {
-  const navigate = useNavigate()
+export const HomePage = () => {
+  const navigate = useNavigate();
   const handleLogout = () => {
-    tokenService.deleteToken()
-    navigate(ROUTES.LOGIN)
-  }
+    tokenService.deleteTokens();
+    navigate(ROUTES.LOGIN);
+  };
 
   useEffect(() => {
-    const token = tokenService.getAccessToken()
-    console.log({ token })
-  }, [])
+    const token = tokenService.getAccessToken();
+    console.log({ token });
+  }, []);
 
   return (
     <div>
@@ -23,5 +23,5 @@ export const HomePage = (): JSX.Element => {
         {MESSAGES.BTN.LOG_OUT}
       </Button>
     </div>
-  )
-}
+  );
+};

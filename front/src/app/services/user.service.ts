@@ -1,4 +1,4 @@
-import { API } from '../utiles/constants/api'
+import { API } from '../utiles/api'
 import { API_ENDPOINTS } from '../utiles/constants/api-endpoints'
 
 type ApiResponse<T> = T
