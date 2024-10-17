@@ -8,6 +8,7 @@ import { ROUTES } from './utiles/constants/routes'
 import { Layout } from './views/Layouts/Layout'
 import { RequireAuth } from './HOK/RequireAuth'
 import { SignUp } from './views/Auth/SignUp'
+import { AuthLayout } from './views/Layouts/AuthLayout'
 
 const router = createBrowserRouter([
   {
@@ -27,14 +28,20 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: ROUTES.LOGIN,
-    element: <Login />,
+    element: <AuthLayout />,
     errorElement: <PageNotFound />,
-  },
-  {
-    path: ROUTES.SIGN_UP,
-    element: <SignUp />,
-    errorElement: <PageNotFound />,
+    children: [
+      {
+        path: ROUTES.LOGIN,
+        element: <Login />,
+        errorElement: <PageNotFound />,
+      },
+      {
+        path: ROUTES.SIGN_UP,
+        element: <SignUp />,
+        errorElement: <PageNotFound />,
+      },
+    ],
   },
 ])
 export const Router = () => {

@@ -1,6 +1,6 @@
 import * as yup from "yup";
-import { REGEX_RULES, VALIDATION_CONSTANTS } from "./constants/validate-form";
-import { FieldNameEnum } from "../global/enums";
+import { REGEX_RULES, VALIDATION_CONSTANTS } from "../../../utiles/constants/validate-form";
+import { FieldNameEnum } from "../../../global/enums";
 
 export const schemaLogin = yup.object().shape({
     [FieldNameEnum.email]: yup

@@ -1,17 +1,15 @@
-import { MouseEvent, useState } from "react";
-import { Control, Controller, FieldPath } from "react-hook-form";
-import { IconButton, InputAdornment, TextField } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-
-import { MESSAGES } from "../../global/messages";
+import { MouseEvent, useState } from 'react'
+import { Control, Controller, FieldPath } from 'react-hook-form'
+import { IconButton, InputAdornment, TextField } from '@mui/material'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 
 type InputProps<T extends object> = {
-  control: Control<T>;
-  name: FieldPath<T>;
-  label: string;
-  placeholder?: string;
-  required?: boolean;
-};
+  control: Control<T>
+  name: FieldPath<T>
+  label: string
+  placeholder?: string
+  required?: boolean
+}
 
 export const PasswordController = <T extends object>({
   control,
@@ -20,17 +18,17 @@ export const PasswordController = <T extends object>({
   placeholder,
   required = false,
 }: InputProps<T>): JSX.Element => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowPassword = () => setShowPassword((show) => !show)
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
+    event.preventDefault()
+  }
 
   const handleMouseUpPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
+    event.preventDefault()
+  }
   return (
     <Controller
       control={control}
@@ -38,12 +36,12 @@ export const PasswordController = <T extends object>({
       render={({ field, fieldState: { error } }) => (
         <TextField
           id={name}
-          type={showPassword ? "text" : "password"}
+          type={showPassword ? 'text' : 'password'}
           fullWidth
           variant="outlined"
           size="small"
           label={label}
-          placeholder={placeholder || MESSAGES.PLACEHOLDERS.PASSWORD}
+          placeholder={placeholder || ''}
           required={required}
           error={!!error}
           helperText={error && error.message}
@@ -67,5 +65,5 @@ export const PasswordController = <T extends object>({
         />
       )}
     />
-  );
-};
+  )
+}
