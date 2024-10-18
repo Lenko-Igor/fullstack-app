@@ -38,7 +38,7 @@ API.interceptors.response.use((response) => {
                     // mostly logout the user and re-authenticate by login again
                     window.location.replace(
                         `${window.location.origin}${API_ENDPOINTS.LOGIN}`
-                    )
+                    );
                 }
             }
         }
