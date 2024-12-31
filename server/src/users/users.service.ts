@@ -41,6 +41,18 @@ export class UsersService {
         })
     }
 
+    async getCurrentUser(user: User): Promise<User> {
+        // const jwt = request.headers.authorization.split(' ')[1]
+        // const { id } = await this.jwtService.decode(jwt)
+        // const user = await this.userRepository.findOneBy({ id })
+
+        // if (!user) {
+        //     throw new HttpException(ErrorEnum.USER_NOT_FOUND, HttpStatus.NOT_FOUND)
+        // }
+
+        return user
+    }
+
     update(id: number, updateUserDto: UpdateUserDto): string {
         console.log('update user dto: ' + updateUserDto)
         return `This action updated user with id:${id}`
