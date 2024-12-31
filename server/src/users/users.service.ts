@@ -2,6 +2,8 @@ import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nes
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import * as bcrypt from 'bcrypt'
+import { Request } from 'express'
+import { JwtService } from '@nestjs/jwt';
 
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -13,6 +15,7 @@ export class UsersService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        private readonly jwtService: JwtService
     ) { }
 
     async create(createUserDto: CreateUserDto): Promise<User> {
@@ -41,16 +44,22 @@ export class UsersService {
         })
     }
 
-    async getCurrentUser(user: User): Promise<User> {
-        // const jwt = request.headers.authorization.split(' ')[1]
-        // const { id } = await this.jwtService.decode(jwt)
-        // const user = await this.userRepository.findOneBy({ id })
+    async getCurrentUser(request: Request): Promise<User> {
+        const jwt = request.headers.authorization.split(' ')[1]
+        const { id } = await this.jwtService.decode(jwt)
+        const user = await this.userRepository.findOneBy(
+            { id },
+        )
 
-        // if (!user) {
-        //     throw new HttpException(ErrorEnum.USER_NOT_FOUND, HttpStatus.NOT_FOUND)
-        // }
+        if (!user) {
+            throw new HttpException(ErrorEnum.USER_NOT_FOUND, HttpStatus.NOT_FOUND)
+        }
 
-        return user
+        return new User({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+        })
     }
 
     update(id: number, updateUserDto: UpdateUserDto): string {

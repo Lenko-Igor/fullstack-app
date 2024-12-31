@@ -1,14 +1,18 @@
 import { Column, Entity } from 'typeorm'
 import { BasicEntity } from '../../utiles/basic'
-
 @Entity()
 export class User extends BasicEntity {
-  @Column()
-  name: string
+    constructor(partial: Partial<User>) {
+        super()
+        Object.assign(this, partial);
+    }
 
-  @Column()
-  email: string
+    @Column()
+    name: string
 
-  @Column()
-  password: string
+    @Column()
+    email: string
+
+    @Column()
+    password: string
 }
