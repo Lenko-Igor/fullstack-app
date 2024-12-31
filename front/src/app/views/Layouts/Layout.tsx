@@ -1,11 +1,22 @@
 import { Outlet } from 'react-router-dom'
-import { Box } from '@mui/material'
+import { Container } from '@mui/material'
+import { Styles } from '../../global/types'
+import { Header } from '../Header'
+
+const styles: Styles = {
+    main: {
+        padding: '10px 0 ',
+    },
+}
 
 export const Layout = (): JSX.Element => {
     return (
-        <Box>
-            <h1>Layout</h1>
-            <Outlet />
-        </Box>
+        <>
+            <Header />
+
+            <Container sx={styles.main} maxWidth={'xl'}>
+                <Outlet />
+            </Container>
+        </>
     )
 }

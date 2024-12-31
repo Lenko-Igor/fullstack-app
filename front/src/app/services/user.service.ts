@@ -16,6 +16,15 @@ const getUsers = async (): Promise<TUser[]> => {
     return response.data
 }
 
+const getCurrentUser = async (): Promise<TUser> => {
+    const response = await API.get<ApiResponse<TUser>>(
+        API_ENDPOINTS.GET_CURRENT_USER,
+    )
+
+    return response.data
+}
+
 export default {
     getUsers,
+    getCurrentUser,
 }
