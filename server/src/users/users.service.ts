@@ -1,7 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import * as bcrypt from 'bcrypt'
+
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/user.entity'
@@ -12,7 +13,7 @@ export class UsersService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
-    ) {}
+    ) { }
 
     async create(createUserDto: CreateUserDto): Promise<User> {
         const isExistUser = await this.userRepository.findOneBy({
@@ -38,6 +39,18 @@ export class UsersService {
         return await this.userRepository.findOneBy({
             email: email,
         })
+    }
+
+    async getCurrentUser(user: User): Promise<User> {
+        // const jwt = request.headers.authorization.split(' ')[1]
+        // const { id } = await this.jwtService.decode(jwt)
+        // const user = await this.userRepository.findOneBy({ id })
+
+        // if (!user) {
+        //     throw new HttpException(ErrorEnum.USER_NOT_FOUND, HttpStatus.NOT_FOUND)
+        // }
+
+        return user
     }
 
     update(id: number, updateUserDto: UpdateUserDto): string {

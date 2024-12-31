@@ -1,28 +1,34 @@
-import { LoginProps, SignUpProps } from '../global/types'
-import { API } from '../utiles/constants/api'
-import { API_ENDPOINTS } from '../utiles/constants/api-endpoints'
+import { LoginProps, SignUpProps } from "../global/types";
+import { API } from "../utiles/api";
+import { API_ENDPOINTS } from "../utiles/constants/api-endpoints";
 
-type ApiResponse<T> = T
+type ApiResponse<T> = T;
 
-const login = async (data: LoginProps): Promise<{ token: string }> => {
-    const response = await API.post<ApiResponse<{ token: string }>>(
+export type LoginResponse = {
+    userId: number;
+    token: string;
+    refreshToken: string;
+};
+
+const login = async (data: LoginProps): Promise<LoginResponse> => {
+    const response = await API.post<ApiResponse<LoginResponse>>(
         API_ENDPOINTS.LOGIN,
         data,
-    )
+    );
 
-    return response.data
-}
+    return response.data;
+};
 
-const signup = async (data: SignUpProps): Promise<{ token: string }> => {
-    const response = await API.post<ApiResponse<{ token: string }>>(
+const signup = async (data: SignUpProps): Promise<LoginResponse> => {
+    const response = await API.post<ApiResponse<LoginResponse>>(
         API_ENDPOINTS.SIGNUP,
         data,
-    )
+    );
 
-    return response.data
-}
+    return response.data;
+};
 
 export default {
     login,
     signup,
-}
+};

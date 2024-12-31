@@ -2,6 +2,7 @@ export const MESSAGES = {
     TITLE: {
         LOG_IN: 'Login to your account',
         REGISTRATION: 'Registration',
+        OPEN_SETTOINGS: 'Open settings',
     },
     BTN: {
         LOG_IN: 'Login',

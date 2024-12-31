@@ -12,9 +12,9 @@ export class AuthService {
     constructor(
         private usersService: UsersService,
         private readonly jwtService: JwtService,
-    ) { }
+    ) {}
 
-    async login(user: User): Promise<{ token: string }> {
+    async login(user: User): Promise<{ token: string; refreshToken: string }> {
         try {
             return this.generateToken(user)
         } catch (e) {
@@ -24,7 +24,7 @@ export class AuthService {
 
     async registration(
         createUserDto: CreateUserDto,
-    ): Promise<{ token: string }> {
+    ): Promise<{ token: string; refreshToken: string }> {
         try {
             const newUser = await this.usersService.create(createUserDto)
             return this.generateToken(newUser)
@@ -33,7 +33,18 @@ export class AuthService {
         }
     }
 
-    private async generateToken(user: User): Promise<{ token: string }> {
+    async refreshToken(user: User): Promise<{ token: string }> {
+        try {
+            const { token } = await this.generateToken(user)
+            return { token }
+        } catch (e) {
+            throw e
+        }
+    }
+
+    private async generateToken(
+        user: User,
+    ): Promise<{ token: string; refreshToken: string }> {
         const payload = {
             id: user.id,
             name: user.name,
@@ -42,6 +53,7 @@ export class AuthService {
 
         return {
             token: this.jwtService.sign(payload),
+            refreshToken: this.jwtService.sign(payload, { expiresIn: '7d' }),
         }
     }
 
