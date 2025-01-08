@@ -47,4 +47,10 @@ export class ProfileService {
     async uploadImage(profileId: string, image: string): Promise<Profile> {
         return
     }
+
+    async removeProfile(profileId: string): Promise<string> {
+        const profile = await this.profileRepository.findOneBy({ id: profileId }).catch(e => { throw new Error(e) });
+        await this.profileRepository.remove(profile).catch(e => { throw new Error(e) });
+        return 'This profile was removed'
+    }
 }

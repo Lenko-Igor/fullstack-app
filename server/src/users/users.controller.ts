@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common'
 import { Request } from 'express'
 
 import { UsersService } from './users.service'
@@ -30,5 +30,11 @@ export class UsersController {
         @UploadedFile() image: string
     ) {
         return this.usersService.createUser(createUserDto, image)
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete('/remove/:userId')
+    removeUserById(@Param('userId') userId: string) {
+        return this.usersService.removeUser(+userId)
     }
 }

@@ -10,7 +10,10 @@ export class User extends BasicEntity {
     }
 
     @Column()
-    name: string
+    firstName: string
+
+    @Column()
+    lastName: string
 
     @Column()
     email: string
@@ -18,7 +21,7 @@ export class User extends BasicEntity {
     @Column()
     password: string
 
-    @OneToOne(() => Profile, profile => profile.user)
+    @OneToOne(() => Profile, profile => profile.user, { eager: true, onDelete: 'CASCADE' })
     @JoinColumn()
     profile: Profile
 }

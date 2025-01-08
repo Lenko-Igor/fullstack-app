@@ -21,7 +21,9 @@ const ProfilePage = () => {
     return (
         <Stack>
             <Typography variant="h1">ProfilePage</Typography>
-            <Typography variant="h2">User: {currentUser.name}</Typography>
+            <Typography variant="h2">
+                {`User: ${currentUser.firstName} ${currentUser.lastName}`}
+            </Typography>
             <Typography variant="h3">Email: {currentUser.email}</Typography>
             <Stack width={200}>
                 {file ? (

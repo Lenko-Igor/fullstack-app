@@ -30,11 +30,13 @@ const CurrentUser = (): JSX.Element => {
             ) : (
                 <>
                     <UserAvatar
-                        name={user?.name || ''}
+                        name={user?.lastName || ''}
                         src={''}
                         size={'small'}
                     />
-                    <Typography variant="h3">{user?.name || ''}</Typography>
+                    <Typography variant="h3">
+                        {`${user?.lastName} ${user?.firstName[0]}` || ''}
+                    </Typography>
                 </>
             )}
         </Stack>

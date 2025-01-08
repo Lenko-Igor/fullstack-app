@@ -63,9 +63,15 @@ export const SignUp = () => {
             >
                 <TextController
                     control={control}
-                    name={FieldNameEnum.name}
-                    label={MESSAGES.LABELS.USER_NAME}
-                    placeholder={MESSAGES.PLACEHOLDERS.YOUR_NAME}
+                    name={FieldNameEnum.first_name}
+                    label={MESSAGES.LABELS.FIRST_NAME}
+                    placeholder={MESSAGES.PLACEHOLDERS.FIRST_NAME}
+                />
+                <TextController
+                    control={control}
+                    name={FieldNameEnum.last_name}
+                    label={MESSAGES.LABELS.LAST_NAME}
+                    placeholder={MESSAGES.PLACEHOLDERS.LAST_NAME}
                 />
                 <EmailController
                     control={control}

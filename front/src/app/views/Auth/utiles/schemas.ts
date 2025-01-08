@@ -14,7 +14,8 @@ export const schemaLogin = yup.object().shape({
 });
 
 export const schemaSignup = yup.object().shape({
-    [FieldNameEnum.name]: yup.string().required(VALIDATION_CONSTANTS.NAME_REQUIRED),
+    [FieldNameEnum.first_name]: yup.string().required(VALIDATION_CONSTANTS.FIRST_NAME_REQUIRED),
+    [FieldNameEnum.last_name]: yup.string().required(VALIDATION_CONSTANTS.LAST_NAME_REQUIRED),
     [FieldNameEnum.email]: yup
         .string()
         .required(VALIDATION_CONSTANTS.EMAIL_REQUIRED)

@@ -1,7 +1,6 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
-import * as bcrypt from 'bcrypt'
 import { Request } from 'express'
 import { JwtService } from '@nestjs/jwt';
 
@@ -70,7 +69,15 @@ export class UsersService {
         return `This action updated user with id:${id}`
     }
 
-    remove(id: number): string {
-        return `Tis action gets remove ${id}`
+    async removeUser(userId: number): Promise<string> {
+        const user = await this.userRepository.findOneBy({ id: userId })
+
+        if (!user) {
+            throw new HttpException(ErrorEnum.USER_NOT_FOUND, HttpStatus.NOT_FOUND)
+        }
+
+        const result = await this.profileService.removeProfile(user.profile.id)
+
+        return result
     }
 }

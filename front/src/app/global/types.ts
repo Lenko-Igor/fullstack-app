@@ -13,7 +13,8 @@ export type LoginProps = {
 };
 
 export type SignUpProps = {
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
     password_confirm: string;
@@ -21,7 +22,8 @@ export type SignUpProps = {
 
 export type TUser = {
     id: string;
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
 }
 

@@ -59,7 +59,8 @@ export class AuthService {
     ): Promise<{ token: string; refreshToken: string }> {
         const payload = {
             id: user.id,
-            name: user.name,
+            firstName: user.firstName,
+            lastName: user.lastName,
             email: user.email,
         }
 
