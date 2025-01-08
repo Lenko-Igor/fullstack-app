@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Post, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common'
 import { Request } from 'express'
 
 import { UsersService } from './users.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
-import { User } from './entities/user.entity'
+import { FileInterceptor } from '@nestjs/platform-express'
 
 @Controller('users')
 export class UsersController {
@@ -24,7 +24,11 @@ export class UsersController {
 
     @UseGuards(JwtAuthGuard)
     @Post()
-    create(@Body() createUserDto: CreateUserDto) {
-        return this.usersService.create(createUserDto)
+    @UseInterceptors(FileInterceptor('image'))
+    createUser(
+        @Body() createUserDto: CreateUserDto,
+        @UploadedFile() image: string
+    ) {
+        return this.usersService.createUser(createUserDto, image)
     }
 }

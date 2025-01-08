@@ -9,33 +9,31 @@ import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/user.entity'
 import { ErrorEnum } from '../types/enums'
+import { ProfileService } from '../profile/profile.service'
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
-        private readonly jwtService: JwtService
+        private readonly jwtService: JwtService,
+        private readonly profileService: ProfileService,
     ) { }
 
-    async create(createUserDto: CreateUserDto): Promise<User> {
-        const isExistUser = await this.userRepository.findOneBy({
-            email: createUserDto.email,
-        })
+    async createUser(createUserDto: CreateUserDto, image?: string): Promise<User> {
+        const newUser = await this.userRepository.save(createUserDto)
+        const profile = await this.profileService.createProfile(newUser, image);
+        newUser.profile = profile
 
-        if (isExistUser)
-            throw new BadRequestException(ErrorEnum.USER_WITH_SUCH_EMAIL_EXISTS)
-
-        const salt = await bcrypt.genSalt()
-        return await this.userRepository.save({
-            name: createUserDto.name,
-            email: createUserDto.email,
-            password: await bcrypt.hash(createUserDto.password, salt),
-        })
+        return newUser
     }
 
     async findAll(): Promise<User[]> {
-        return await this.userRepository.find()
+        return await this.userRepository.find({
+            relations: {
+                profile: true,
+            },
+        })
     }
 
     async findOneByEmail(email: string): Promise<User> {
@@ -44,22 +42,27 @@ export class UsersService {
         })
     }
 
+    async findOneById(id: number): Promise<User> {
+        return await this.userRepository.findOneBy({
+            id
+        })
+    }
+
     async getCurrentUser(request: Request): Promise<User> {
         const jwt = request.headers.authorization.split(' ')[1]
         const { id } = await this.jwtService.decode(jwt)
-        const user = await this.userRepository.findOneBy(
-            { id },
-        )
+        const user = await this.userRepository.findOne({
+            where: { id },
+            relations: {
+                profile: true,
+            }
+        })
 
         if (!user) {
             throw new HttpException(ErrorEnum.USER_NOT_FOUND, HttpStatus.NOT_FOUND)
         }
 
-        return new User({
-            id: user.id,
-            name: user.name,
-            email: user.email,
-        })
+        return new User(user)
     }
 
     update(id: number, updateUserDto: UpdateUserDto): string {
