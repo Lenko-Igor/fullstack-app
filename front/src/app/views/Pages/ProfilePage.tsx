@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
-import { Button, Stack, Typography } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import UploadIcon from '@mui/icons-material/Upload'
+import EditIcon from '@mui/icons-material/Edit'
 
 import { useUserStore } from '../../store/user.store'
+import { Styles } from '../../global/types'
+import { UserAvatar } from '../../components/UserAvatar'
 
-const ProfilePage = () => {
+const ProfilePage = (): JSX.Element => {
     const [file, setFile] = useState<File | null>(null)
     const { currentUser } = useUserStore((state) => state)
 
@@ -25,31 +29,50 @@ const ProfilePage = () => {
                 {`User: ${currentUser.firstName} ${currentUser.lastName}`}
             </Typography>
             <Typography variant="h3">Email: {currentUser.email}</Typography>
-            <Stack width={200}>
-                {file ? (
-                    <>
-                        <img
-                            src={URL.createObjectURL(file)}
-                            alt="avatar"
-                            width={200}
+            <Stack width={100} alignItems={'center'}>
+                <UserAvatar
+                    src={file ? URL.createObjectURL(file) : ''}
+                    name={currentUser.lastName}
+                    component="label"
+                    size="large"
+                    sx={file ? {} : styles.action_icon}
+                >
+                    <input
+                        type="file"
+                        hidden
+                        id="avatar"
+                        name="avatar"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                    />
+                </UserAvatar>
+                {file && (
+                    <Stack
+                        direction={'row'}
+                        justifyContent={'center'}
+                        alignItems={'center'}
+                        gap={'10px'}
+                    >
+                        <UploadIcon
+                            onClick={handleUpload}
+                            sx={styles.action_icon}
                         />
-                        <DeleteForeverIcon onClick={clearForm} />
-                        <Button variant="contained" onClick={handleUpload}>
-                            Upload
-                        </Button>
-                    </>
-                ) : (
-                    <Button variant="contained" component="label" fullWidth>
-                        Select avatar
-                        <input
-                            type="file"
-                            hidden
-                            id="avatar"
-                            name="avatar"
-                            accept="image/*"
-                            onChange={handleFileChange}
+                        <DeleteForeverIcon
+                            onClick={clearForm}
+                            sx={styles.action_icon}
                         />
-                    </Button>
+                        <Stack component="label" sx={styles.action_icon}>
+                            <EditIcon />
+                            <input
+                                type="file"
+                                hidden
+                                id="avatar"
+                                name="avatar"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                            />
+                        </Stack>
+                    </Stack>
                 )}
             </Stack>
         </Stack>
@@ -57,3 +80,9 @@ const ProfilePage = () => {
 }
 
 export default ProfilePage
+
+const styles: Styles = {
+    action_icon: {
+        cursor: 'pointer',
+    },
+}

@@ -35,7 +35,7 @@ const CurrentUser = (): JSX.Element => {
                         size={'small'}
                     />
                     <Typography variant="h3">
-                        {`${user?.lastName} ${user?.firstName[0]}` || ''}
+                        {`${user?.lastName || ''} ${user?.firstName[0] || ''}`}
                     </Typography>
                 </>
             )}
