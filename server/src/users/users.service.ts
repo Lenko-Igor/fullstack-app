@@ -1,38 +1,38 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
-import * as bcrypt from 'bcrypt'
+import { Request } from 'express'
+import { JwtService } from '@nestjs/jwt';
 
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/user.entity'
 import { ErrorEnum } from '../types/enums'
+import { ProfileService } from '../profile/profile.service'
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        private readonly jwtService: JwtService,
+        private readonly profileService: ProfileService,
     ) { }
 
-    async create(createUserDto: CreateUserDto): Promise<User> {
-        const isExistUser = await this.userRepository.findOneBy({
-            email: createUserDto.email,
-        })
+    async createUser(createUserDto: CreateUserDto, image?: string): Promise<User> {
+        const newUser = await this.userRepository.save(createUserDto)
+        const profile = await this.profileService.createProfile(newUser, image);
+        newUser.profile = profile
 
-        if (isExistUser)
-            throw new BadRequestException(ErrorEnum.USER_WITH_SUCH_EMAIL_EXISTS)
-
-        const salt = await bcrypt.genSalt()
-        return await this.userRepository.save({
-            name: createUserDto.name,
-            email: createUserDto.email,
-            password: await bcrypt.hash(createUserDto.password, salt),
-        })
+        return newUser
     }
 
     async findAll(): Promise<User[]> {
-        return await this.userRepository.find()
+        return await this.userRepository.find({
+            relations: {
+                profile: true,
+            },
+        })
     }
 
     async findOneByEmail(email: string): Promise<User> {
@@ -41,24 +41,46 @@ export class UsersService {
         })
     }
 
-    async getCurrentUser(user: User): Promise<User> {
-        // const jwt = request.headers.authorization.split(' ')[1]
-        // const { id } = await this.jwtService.decode(jwt)
-        // const user = await this.userRepository.findOneBy({ id })
+    async findOneById(id: number): Promise<User> {
+        return await this.userRepository.findOneBy({ id })
+    }
 
-        // if (!user) {
-        //     throw new HttpException(ErrorEnum.USER_NOT_FOUND, HttpStatus.NOT_FOUND)
-        // }
+    async getCurrentUser(request: Request): Promise<User> {
+        const jwt = request.headers.authorization.split(' ')[1]
+        const { id } = await this.jwtService.decode(jwt)
+        const user = await this.userRepository.findOne({
+            where: { id },
+            relations: {
+                profile: true,
+            }
+        })
+
+        if (!user) {
+            throw new HttpException(ErrorEnum.USER_NOT_FOUND, HttpStatus.NOT_FOUND)
+        }
+
+        return new User(user)
+    }
+
+    async update(id: number, updateUserDto: UpdateUserDto, image?: string): Promise<User> {
+        const user = await this.findOneById(id).catch(e => { throw new Error(e) });
+        const { id: profileId } = user.profile || {}
+
+        await this.userRepository.update(user.id, updateUserDto).catch(e => { throw new Error(e) });
+        await this.profileService.updateProfile(profileId, image).catch(e => { throw new Error(e) });
 
         return user
     }
 
-    update(id: number, updateUserDto: UpdateUserDto): string {
-        console.log('update user dto: ' + updateUserDto)
-        return `This action updated user with id:${id}`
-    }
+    async removeUser(userId: number): Promise<string> {
+        const user = await this.userRepository.findOneBy({ id: userId })
 
-    remove(id: number): string {
-        return `Tis action gets remove ${id}`
+        if (!user) {
+            throw new HttpException(ErrorEnum.USER_NOT_FOUND, HttpStatus.NOT_FOUND)
+        }
+
+        const result = await this.profileService.removeProfile(user.profile.id)
+
+        return result
     }
 }

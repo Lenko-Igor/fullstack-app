@@ -1,14 +1,27 @@
+import { useEffect } from 'react'
 import { CircularProgress, Stack, Typography } from '@mui/material'
-
 import { useQuery } from '@tanstack/react-query'
+
 import userService from '../../services/user.service'
 import { UserAvatar } from '../../components/UserAvatar'
+import { useUserStore } from './../../store/user.store'
 
 const CurrentUser = (): JSX.Element => {
-    const { data: user, isPending } = useQuery({
+    const setCurrentUser = useUserStore((state) => state.setCurrentUser)
+    const {
+        data: user,
+        isPending,
+        isSuccess,
+    } = useQuery({
         queryKey: ['user'],
         queryFn: userService.getCurrentUser,
     })
+
+    useEffect(() => {
+        if (isSuccess && user) {
+            setCurrentUser(user)
+        }
+    }, [isSuccess, user])
 
     return (
         <Stack direction={'row'} alignItems={'center'} gap={'10px'}>
@@ -17,11 +30,13 @@ const CurrentUser = (): JSX.Element => {
             ) : (
                 <>
                     <UserAvatar
-                        name={user?.name || ''}
-                        src={''}
+                        name={user?.lastName || ''}
+                        src={user?.profile?.dataURL || ''}
                         size={'small'}
                     />
-                    <Typography variant="h3">{user?.name || ''}</Typography>
+                    <Typography variant="h3">
+                        {`${user?.lastName || ''} ${user?.firstName[0] || ''}`}
+                    </Typography>
                 </>
             )}
         </Stack>

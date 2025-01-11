@@ -5,7 +5,6 @@ import { API_ENDPOINTS } from "../utiles/constants/api-endpoints";
 type ApiResponse<T> = T;
 
 export type LoginResponse = {
-    userId: number;
     token: string;
     refreshToken: string;
 };

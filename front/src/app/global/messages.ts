@@ -13,13 +13,18 @@ export const MESSAGES = {
     PLACEHOLDERS: {
         EMAIL: 'you@email.com',
         YOUR_NAME: 'John Doe',
+        FIRST_NAME: 'John',
+        LAST_NAME: 'Doe',
     },
     LABELS: {
         EMAIL: 'E-mail',
         PASSWORD: 'Password',
         CONFIRM_PASSWORD: 'Confirm password',
         USER_NAME: 'Name',
+        FIRST_NAME: 'First name',
+        LAST_NAME: 'Last name',
         WELCOME_BACK: 'Welcome back!',
         WELCOME_REGISTRATION: `Welcome for registration!`,
-    }
+    },
+    SUCCESS: { UPDATED: 'Updated successfully' },
 }

@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
 import { UsersService } from '../users/users.service'
@@ -12,7 +12,7 @@ export class AuthService {
     constructor(
         private usersService: UsersService,
         private readonly jwtService: JwtService,
-    ) {}
+    ) { }
 
     async login(user: User): Promise<{ token: string; refreshToken: string }> {
         try {
@@ -24,13 +24,25 @@ export class AuthService {
 
     async registration(
         createUserDto: CreateUserDto,
+        image?: string
     ): Promise<{ token: string; refreshToken: string }> {
-        try {
-            const newUser = await this.usersService.create(createUserDto)
-            return this.generateToken(newUser)
-        } catch (e) {
-            throw e
+        const candidate = await this.usersService.findOneByEmail(createUserDto.email)
+
+        if (candidate) {
+            throw new HttpException(
+                ErrorEnum.USER_WITH_SUCH_EMAIL_EXISTS,
+                HttpStatus.BAD_REQUEST,
+            )
         }
+
+        const salt = await bcrypt.genSalt()
+        const hashPassword = await bcrypt.hash(createUserDto.password, salt)
+        const newUser = await this.usersService.createUser(
+            { ...createUserDto, password: hashPassword },
+            image
+        )
+
+        return this.generateToken(newUser)
     }
 
     async refreshToken(user: User): Promise<{ token: string }> {
@@ -47,7 +59,8 @@ export class AuthService {
     ): Promise<{ token: string; refreshToken: string }> {
         const payload = {
             id: user.id,
-            name: user.name,
+            firstName: user.firstName,
+            lastName: user.lastName,
             email: user.email,
         }
 

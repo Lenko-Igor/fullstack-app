@@ -35,9 +35,7 @@ export const Login = () => {
         mutationFn: (data: LoginProps): Promise<LoginResponse> => {
             return authService.login(data)
         },
-        onSuccess: ({ token, refreshToken, userId }) => {
-            console.log({ userId })
-
+        onSuccess: ({ token, refreshToken }) => {
             tokenService.setTokens({ token, refreshToken })
             navigate(ROUTES.INITIAL_ROUTE)
         },

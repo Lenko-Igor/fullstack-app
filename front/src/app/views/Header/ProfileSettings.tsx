@@ -17,7 +17,7 @@ const styles: Styles = {
     icon_button: {
         borderRadius: '5px',
         padding: '2px 10px',
-        color: (theme) => theme.palette.white.main,
+        color: (theme) => theme.palette.common.white,
     },
     menu: { mt: '45px' },
 }
