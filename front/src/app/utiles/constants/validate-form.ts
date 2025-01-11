@@ -6,6 +6,8 @@ export const REGEX_RULES = {
 export const VALIDATION_CONSTANTS = {
     COMMON: 'This field is required',
     NAME_REQUIRED: 'Please provide your name',
+    FIRST_NAME_REQUIRED: 'Please provide your first name',
+    LAST_NAME_REQUIRED: 'Please provide your last name',
     EMAIL_REQUIRED: 'Please provide your email',
     EMAIL_VALID: 'Please enter a valid email address',
     EMAIL_ALREADY_EXISTS: 'Email is already exist',

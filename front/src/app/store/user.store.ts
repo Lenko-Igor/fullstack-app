@@ -5,8 +5,10 @@ import { TUser } from '../global/types'
 const INITIAL_STATE: UserData = {
     currentUser: {
         id: '',
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
+        profile: null,
     }
 }
 

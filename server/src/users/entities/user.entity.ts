@@ -1,5 +1,7 @@
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm'
 import { BasicEntity } from '../../utiles/basic'
+import { Profile } from '../../profile/entities/profile.entity';
+import { profile } from 'console';
 @Entity()
 export class User extends BasicEntity {
     constructor(partial: Partial<User>) {
@@ -8,11 +10,18 @@ export class User extends BasicEntity {
     }
 
     @Column()
-    name: string
+    firstName: string
+
+    @Column()
+    lastName: string
 
     @Column()
     email: string
 
     @Column()
     password: string
+
+    @OneToOne(() => Profile, profile => profile.user, { eager: true, onDelete: 'CASCADE' })
+    @JoinColumn()
+    profile: Profile
 }

@@ -13,16 +13,29 @@ export type LoginProps = {
 };
 
 export type SignUpProps = {
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
     password_confirm: string;
 };
 
+export type ProfileProps = {
+    firstName: string;
+    lastName: string;
+    email: string;
+};
+
 export type TUser = {
     id: string;
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
+    profile: {
+        id: string;
+        fileName: string;
+        dataURL: string;
+    } | null;
 }
 
 export type StyleProps =
