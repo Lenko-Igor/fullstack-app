@@ -1,7 +1,8 @@
 import { FieldNameEnum } from "../../../global/enums";
 
 export const defaultValueSignUp = {
-    [FieldNameEnum.name]: '',
+    [FieldNameEnum.first_name]: '',
+    [FieldNameEnum.last_name]: '',
     [FieldNameEnum.email]: '',
     [FieldNameEnum.password]: '',
     [FieldNameEnum.password_confirm]: '',

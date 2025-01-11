@@ -25,5 +25,6 @@ export const MESSAGES = {
         LAST_NAME: 'Last name',
         WELCOME_BACK: 'Welcome back!',
         WELCOME_REGISTRATION: `Welcome for registration!`,
-    }
+    },
+    SUCCESS: { UPDATED: 'Updated successfully' },
 }

@@ -16,4 +16,5 @@ export enum ErrorEnum {
     REMAINING_LIKE_NOT_FOUNT = 'The remaining like is missing',
     INCORRECT_USER_ID = 'Incorrect user ID. You can not use own user ID',
     INTERNAL_SERVER_ERROR = 'Internal server error',
+    FILE_NOT_FOUND = 'File is not found',
 }

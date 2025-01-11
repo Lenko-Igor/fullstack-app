@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorEnum } from '../types/enums';
 import { User } from '../users/entities/user.entity';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Injectable()
 export class ProfileService {
@@ -15,13 +16,23 @@ export class ProfileService {
     ) { }
 
     async createProfile(user: User, image: string): Promise<Profile> {
-        const fileName = image ? await this.filesService.createFile(image) : '';
+        const imageUrl = image ? await this.filesService.createFile(image) : '';
         const profile = this.profileRepository.create({
-            image: fileName,
+            image: imageUrl,
             user
         });
 
         return this.profileRepository.save(profile);
+    }
+
+    async updateProfile(profileId: string, updateProfileDto: UpdateProfileDto): Promise<string> {
+        const { image } = updateProfileDto
+        const imageUrl = image ? await this.filesService.createFile(image) : '';
+
+        await this.profileRepository.update(profileId, { ...updateProfileDto, image: imageUrl })
+            .catch(e => { throw new Error(e) });
+
+        return imageUrl
     }
 
     async getAllProfiles(): Promise<Profile[]> {
@@ -42,10 +53,6 @@ export class ProfileService {
         }
 
         return profile
-    }
-
-    async uploadImage(profileId: string, image: string): Promise<Profile> {
-        return
     }
 
     async removeProfile(profileId: string): Promise<string> {

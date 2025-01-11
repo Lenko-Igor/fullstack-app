@@ -20,11 +20,21 @@ export type SignUpProps = {
     password_confirm: string;
 };
 
+export type ProfileProps = {
+    firstName: string;
+    lastName: string;
+    email: string;
+};
+
 export type TUser = {
     id: string;
     firstName: string;
     lastName: string;
     email: string;
+    profile: {
+        id: string;
+        image: string;
+    } | null;
 }
 
 export type StyleProps =

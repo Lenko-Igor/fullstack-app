@@ -5,4 +5,5 @@ export enum FieldNameEnum {
     name = 'name',
     first_name = 'firstName',
     last_name = 'lastName',
+    image = 'image',
 }

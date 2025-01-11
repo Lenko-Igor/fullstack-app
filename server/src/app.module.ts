@@ -6,7 +6,6 @@ import { AppService } from './app.service'
 import { UsersModule } from './users/users.module'
 import { AuthModule } from './auth/auth.module'
 import { ProfileModule } from './profile/profile.module';
-import { FilesService } from './files/files.service';
 import { FilesModule } from './files/files.module';
 
 @Module({

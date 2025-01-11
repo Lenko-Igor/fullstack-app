@@ -20,7 +20,17 @@ const getCurrentUser = async (): Promise<TUser> => {
     return response.data
 }
 
+const updateUser = async (userId: string, data: FormData): Promise<TUser> => {
+    const response = await API.patch<ApiResponse<TUser>>(
+        API_ENDPOINTS.UPDATE_USER_BY_ID(userId),
+        data,
+    )
+
+    return response.data
+}
+
 export default {
     getUsers,
     getCurrentUser,
+    updateUser,
 }

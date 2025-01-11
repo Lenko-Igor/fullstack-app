@@ -8,6 +8,7 @@ const INITIAL_STATE: UserData = {
         firstName: '',
         lastName: '',
         email: '',
+        profile: null,
     }
 }
 

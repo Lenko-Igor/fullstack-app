@@ -21,13 +21,4 @@ export class ProfileController {
         return this.profileService.getProfileById(profileId);
     }
 
-    @UseGuards(JwtAuthGuard)
-    @Post('/update/:profileId')
-    @UseInterceptors(FileInterceptor('image'))
-    uploadImage(
-        @Param('profileId') profileId: string,
-        @UploadedFile() image: string,
-    ): Promise<Profile> {
-        return this.profileService.uploadImage(profileId, image);
-    }
 }

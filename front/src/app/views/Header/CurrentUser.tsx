@@ -21,7 +21,7 @@ const CurrentUser = (): JSX.Element => {
         if (isSuccess && user) {
             setCurrentUser(user)
         }
-    }, [isSuccess])
+    }, [isSuccess, user])
 
     return (
         <Stack direction={'row'} alignItems={'center'} gap={'10px'}>
@@ -31,7 +31,7 @@ const CurrentUser = (): JSX.Element => {
                 <>
                     <UserAvatar
                         name={user?.lastName || ''}
-                        src={''}
+                        src={user?.profile?.image || ''}
                         size={'small'}
                     />
                     <Typography variant="h3">

@@ -42,9 +42,7 @@ export class UsersService {
     }
 
     async findOneById(id: number): Promise<User> {
-        return await this.userRepository.findOneBy({
-            id
-        })
+        return await this.userRepository.findOneBy({ id })
     }
 
     async getCurrentUser(request: Request): Promise<User> {
@@ -64,9 +62,14 @@ export class UsersService {
         return new User(user)
     }
 
-    update(id: number, updateUserDto: UpdateUserDto): string {
-        console.log('update user dto: ' + updateUserDto)
-        return `This action updated user with id:${id}`
+    async update(id: number, updateUserDto: UpdateUserDto, image?: string): Promise<User> {
+        const user = await this.findOneById(id).catch(e => { throw new Error(e) });
+        const { id: profileId } = user.profile || {}
+
+        await this.userRepository.update(user.id, updateUserDto).catch(e => { throw new Error(e) });
+        await this.profileService.updateProfile(profileId, { image }).catch(e => { throw new Error(e) });
+
+        return user
     }
 
     async removeUser(userId: number): Promise<string> {
