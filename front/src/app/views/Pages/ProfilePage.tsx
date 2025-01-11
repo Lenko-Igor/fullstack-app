@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Stack, Typography } from '@mui/material'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import UploadIcon from '@mui/icons-material/Upload'
 import EditIcon from '@mui/icons-material/Edit'
 
 import { useUserStore } from '../../store/user.store'
@@ -63,10 +62,6 @@ const ProfilePage = (): JSX.Element => {
 
     const clearForm = () => setFile(null)
 
-    const handleUpload = () => {
-        console.log({ file })
-    }
-
     const onSubmit: SubmitHandler<ProfileProps> = (data) => {
         const formData = new FormData()
 
@@ -80,10 +75,10 @@ const ProfilePage = (): JSX.Element => {
     }
 
     useEffect(() => {
-        const { image } = currentUser.profile || {}
+        const { fileName, dataURL } = currentUser.profile || {}
 
-        if (image) {
-            const file = dataURLtoFile(image, 'avatar.png')
+        if (fileName && dataURL) {
+            const file = dataURLtoFile(dataURL, fileName)
             setFile(file as File)
         }
     }, [currentUser])
@@ -138,10 +133,6 @@ const ProfilePage = (): JSX.Element => {
                         alignItems={'center'}
                         gap={'10px'}
                     >
-                        <UploadIcon
-                            onClick={handleUpload}
-                            sx={styles.action_icon}
-                        />
                         <DeleteForeverIcon
                             onClick={clearForm}
                             sx={styles.action_icon}

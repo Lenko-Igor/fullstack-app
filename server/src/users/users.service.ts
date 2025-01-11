@@ -67,7 +67,7 @@ export class UsersService {
         const { id: profileId } = user.profile || {}
 
         await this.userRepository.update(user.id, updateUserDto).catch(e => { throw new Error(e) });
-        await this.profileService.updateProfile(profileId, { image }).catch(e => { throw new Error(e) });
+        await this.profileService.updateProfile(profileId, image).catch(e => { throw new Error(e) });
 
         return user
     }

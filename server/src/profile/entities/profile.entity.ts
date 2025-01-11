@@ -8,7 +8,10 @@ export class Profile {
     id: string
 
     @Column()
-    image: string
+    fileName: string
+
+    @Column()
+    dataURL: string
 
     @OneToOne(() => User, user => user.profile, { onDelete: "CASCADE" })
     user: User

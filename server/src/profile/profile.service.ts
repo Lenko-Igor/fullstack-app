@@ -16,23 +16,27 @@ export class ProfileService {
     ) { }
 
     async createProfile(user: User, image: string): Promise<Profile> {
-        const imageUrl = image ? await this.filesService.createFile(image) : '';
+        const { fileName, dataURL } = image
+            ? await this.filesService.createFile(image)
+            : { fileName: '', dataURL: '' };
         const profile = this.profileRepository.create({
-            image: imageUrl,
+            fileName,
+            dataURL,
             user
         });
 
         return this.profileRepository.save(profile);
     }
 
-    async updateProfile(profileId: string, updateProfileDto: UpdateProfileDto): Promise<string> {
-        const { image } = updateProfileDto
-        const imageUrl = image ? await this.filesService.createFile(image) : '';
+    async updateProfile(profileId: string, image: string): Promise<string> {
+        const { fileName, dataURL } = image
+            ? await this.filesService.createFile(image)
+            : { fileName: '', dataURL: '' };
 
-        await this.profileRepository.update(profileId, { ...updateProfileDto, image: imageUrl })
+        await this.profileRepository.update(profileId, { fileName, dataURL })
             .catch(e => { throw new Error(e) });
 
-        return imageUrl
+        return 'This profile was updated'
     }
 
     async getAllProfiles(): Promise<Profile[]> {

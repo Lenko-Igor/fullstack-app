@@ -31,7 +31,7 @@ const CurrentUser = (): JSX.Element => {
                 <>
                     <UserAvatar
                         name={user?.lastName || ''}
-                        src={user?.profile?.image || ''}
+                        src={user?.profile?.dataURL || ''}
                         size={'small'}
                     />
                     <Typography variant="h3">

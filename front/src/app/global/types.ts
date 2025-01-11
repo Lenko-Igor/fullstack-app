@@ -33,7 +33,8 @@ export type TUser = {
     email: string;
     profile: {
         id: string;
-        image: string;
+        fileName: string;
+        dataURL: string;
     } | null;
 }
 
